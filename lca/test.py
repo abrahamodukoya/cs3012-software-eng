@@ -36,7 +36,6 @@ class LCATest(unittest.TestCase):
         self.assertEqual(self.aGraph.E, 6)
         self.assertEqual(self.aGraph.adjList, adjList)
 
-    #TODO: test bfs
     def test_bfs(self):
         root = 0
         self.aGraph.bfs(root)
@@ -98,7 +97,6 @@ class LCATest(unittest.TestCase):
         self.assertEqual(self.aGraph.distTo, distTo)
         self.assertEqual(self.aGraph.parent, parent)
 
-    #TODO: test lca
     def test_get_lca(self):
         self.assertEqual(None, self.aGraph.get_lca(0, 1, 2))
         self.aGraph.add_edge(0, 1)
