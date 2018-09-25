@@ -100,7 +100,22 @@ class LCATest(unittest.TestCase):
 
     #TODO: test lca
     def test_get_lca(self):
-        pass
+        self.assertEqual(None, self.aGraph.get_lca(0, 1, 2))
+        self.aGraph.add_edge(0, 1)
+        self.aGraph.add_edge(0, 2)
+        self.assertEqual(0, self.aGraph.get_lca(0, 1, 2))
+        self.aGraph.add_edge(1, 3)
+        self.aGraph.add_edge(1, 4)
+        self.aGraph.add_edge(4, 6)
+        self.aGraph.add_edge(4, 7)
+        self.aGraph.add_edge(3, 5)
+        self.aGraph.add_edge(5, 8)
+        self.aGraph.add_edge(8, 9)
+        self.assertEqual(1, self.aGraph.get_lca(0, 9, 7))
+        self.assertEqual(0, self.aGraph.get_lca(0, 6, 2))
+        self.assertEqual(5, self.aGraph.get_lca(0, 5, 8))
+        self.assertEqual(0, self.aGraph.get_lca(0, 0, 1))
+        self.assertEqual(9, self.aGraph.get_lca(0, 9, 9))
 
 if __name__ == '__main__':
     unittest.main()

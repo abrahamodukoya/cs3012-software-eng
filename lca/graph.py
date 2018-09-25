@@ -6,6 +6,9 @@ class Graph:
         self.adjList = [[] for i in range(V)]
         self.V = V
         self.E = 0
+        self.marked = [False for v in range(self.V)]
+        self.distTo = [0 for v in range(self.V)]
+        self.parent = [None for v in range(self.V)]
 
     #adds a directed edge from u to v
     def add_edge(self, u, v):
@@ -15,6 +18,8 @@ class Graph:
 
     def get_lca(self, root, x, y):
         self.bfs(root)
+        if not(self.marked[x] or self.marked[y]):
+            return None
         #lowerV is the vertex deepest in the graph
         lowerV = y
         higherV = x
