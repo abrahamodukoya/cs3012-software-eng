@@ -115,5 +115,13 @@ class LCATest(unittest.TestCase):
         self.assertEqual(0, self.aGraph.get_lca(0, 0, 1))
         self.assertEqual(9, self.aGraph.get_lca(0, 9, 9))
 
+    def test_get_dag_lca(self):
+        self.aGraph.add_edge(0, 1)
+        self.aGraph.add_edge(0, 2)
+        self.aGraph.add_edge(1, 3)
+        self.aGraph.add_edge(2, 3)
+        self.aGraph.add_edge(3, 4)
+        self.assertEqual(1, self.aGraph.get_lca(0, 4, 1))
+
 if __name__ == '__main__':
     unittest.main()
