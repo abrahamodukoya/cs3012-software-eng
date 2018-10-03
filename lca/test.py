@@ -121,7 +121,14 @@ class LCATest(unittest.TestCase):
         self.aGraph.add_edge(1, 3)
         self.aGraph.add_edge(2, 3)
         self.aGraph.add_edge(3, 4)
-        self.assertEqual(1, self.aGraph.get_lca(0, 4, 1))
+        self.assertEqual(2, self.aGraph.get_lca(0, 4, 2))
+        self.aGraph.add_edge(1, 5)
+        self.aGraph.add_edge(2, 5)
+        self.assertEqual(1, self.aGraph.get_lca(0, 5, 3))
+        self.aGraph.add_edge(2, 6)
+        self.aGraph.add_edge(1, 6)
+        self.assertEqual(1, self.aGraph.get_lca(0, 6, 3))
+
 
 if __name__ == '__main__':
     unittest.main()

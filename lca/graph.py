@@ -16,6 +16,9 @@ class Graph:
             self.adjList[u].append(v)
             self.E = self.E + 1
 
+    #TODO: currently if two paths of equal length from the root
+    #to a node exist, only one of them is recorded, but the LCA
+    #for two nodes could be in the other path. Fix
     def get_lca(self, root, x, y):
         self.bfs(root)
         if not(self.marked[x] or self.marked[y]):
