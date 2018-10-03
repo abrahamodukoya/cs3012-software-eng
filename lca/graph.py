@@ -6,9 +6,6 @@ class Graph:
         self.adjList = [[] for i in range(V)]
         self.V = V
         self.E = 0
-        self.marked = [False for v in range(self.V)]
-        self.distTo = [0 for v in range(self.V)]
-        self.parent = [None for v in range(self.V)]
 
     #adds a directed edge from u to v
     def add_edge(self, u, v):
@@ -19,37 +16,58 @@ class Graph:
     #TODO: currently if two paths of equal length from the root
     #to a node exist, only one of them is recorded, but the LCA
     #for two nodes could be in the other path. Fix
+    #IDEA: run BFS from each of the nodes. Each BFS run gets its own
+    #arrays. If x is marked when running BFS from y, then y is the LCA,
+    #and vice-versa. Otherwise proceed as before
     def get_lca(self, root, x, y):
-        self.bfs(root)
-        if not(self.marked[x] or self.marked[y]):
+        xMarked = [False for v in range(self.V)]
+        xDistTo = [0 for v in range(self.V)]
+        xParent = [None for v in range(self.V)]
+        self.bfs(x, xMarked, xDistTo, xParent)
+        if xMarked[y]:
+            return x
+
+        yMarked = [False for v in range(self.V)]
+        yDistTo = [0 for v in range(self.V)]
+        yParent = [None for v in range(self.V)]
+        self.bfs(y, yMarked, yDistTo, yParent)
+        if yMarked[x]:
+            return y
+
+        rootMarked = [False for v in range(self.V)]
+        rootDistTo = [0 for v in range(self.V)]
+        rootParent = [None for v in range(self.V)]
+        self.bfs(root, rootMarked, rootDistTo, rootParent)
+        if not(rootMarked[x] or rootMarked[y]):
             return None
         #lowerV is the vertex deepest in the graph
         lowerV = y
         higherV = x
-        if self.distTo[x] > self.distTo[y]:
+        if rootDistTo[x] > rootDistTo[y]:
             lowerV = x
             higherV = y
-        depthDiff = self.distTo[lowerV] - self.distTo[higherV]
+        depthDiff = rootDistTo[lowerV] - rootDistTo[higherV]
         while depthDiff > 0:
-            lowerV = self.parent[lowerV]
+            lowerV = rootParent[lowerV]
             depthDiff = depthDiff - 1
         while lowerV != higherV:
-            lowerV = self.parent[lowerV]
-            higherV = self.parent[higherV]
+            lowerV = rootParent[lowerV]
+            higherV = rootParent[higherV]
         return lowerV
 
-    def bfs(self, v):
-        self.marked = [False for v in range(self.V)]
-        self.distTo = [0 for v in range(self.V)]
-        self.parent = [None for v in range(self.V)]
+    def bfs(self, v, marked, distTo, parent):
+        #caller should do the initialisation
+        #marked = [False for v in range(self.V)]
+        #distTo = [0 for v in range(self.V)]
+        #parent = [None for v in range(self.V)]
         vertexQueue = queue.Queue()
         vertexQueue.put(v)
-        self.marked[v] = True
+        marked[v] = True
         while not vertexQueue.empty():
             u = vertexQueue.get()
             for child in self.adjList[u]:
-                if not self.marked[child]:
+                if not marked[child]:
                     vertexQueue.put(child)
-                    self.parent[child] = u
-                    self.marked[child] = True
-                    self.distTo[child] = 1 + self.distTo[u]
+                    parent[child] = u
+                    marked[child] = True
+                    distTo[child] = 1 + distTo[u]

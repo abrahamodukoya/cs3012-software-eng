@@ -38,64 +38,85 @@ class LCATest(unittest.TestCase):
 
     def test_bfs(self):
         root = 0
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked = [True] + [False for x in range(1, self.graphSize)]
         distTo = [0 for x in range(self.graphSize)]
         parent = [None for x in range(self.graphSize)]
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(0, 1)
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked[1] = True
         distTo[1] = 1
         parent[1] = 0
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(0, 2)
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked[2] = True
         distTo[2] = 1
         parent[2] = 0
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(2, 3)
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked[3] = True
         distTo[3] = 2
         parent[3] = 2
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(3, 4)
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked[4] = True
         distTo[4] = 3
         parent[4] = 3
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(1, 5)
-        self.aGraph.bfs(root)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
         marked[5] = True
         distTo[5] = 2
         parent[5] = 1
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
         self.aGraph.add_edge(4, 5)
-        self.aGraph.bfs(root)
-        self.assertEqual(self.aGraph.marked, marked)
-        self.assertEqual(self.aGraph.distTo, distTo)
-        self.assertEqual(self.aGraph.parent, parent)
+        rootMarked = [False for v in range(self.aGraph.V)]
+        rootDistTo = [0 for v in range(self.aGraph.V)]
+        rootParent = [None for v in range(self.aGraph.V)]
+        self.aGraph.bfs(root, rootMarked, rootDistTo, rootParent)
+        self.assertEqual(rootMarked, marked)
+        self.assertEqual(rootDistTo, distTo)
+        self.assertEqual(rootParent, parent)
 
     def test_get_lca(self):
         self.assertEqual(None, self.aGraph.get_lca(0, 1, 2))
@@ -121,6 +142,7 @@ class LCATest(unittest.TestCase):
         self.aGraph.add_edge(1, 3)
         self.aGraph.add_edge(2, 3)
         self.aGraph.add_edge(3, 4)
+        self.assertEqual(1, self.aGraph.get_lca(0, 4, 1))
         self.assertEqual(2, self.aGraph.get_lca(0, 4, 2))
         self.aGraph.add_edge(1, 5)
         self.aGraph.add_edge(2, 5)
