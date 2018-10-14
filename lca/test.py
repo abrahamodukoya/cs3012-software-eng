@@ -136,7 +136,7 @@ class LCATest(unittest.TestCase):
         self.assertEqual(0, self.aGraph.get_lca(0, 0, 1))
         self.assertEqual(9, self.aGraph.get_lca(0, 9, 9))
 
-    def test_get_dag_lca(self):
+    def test_get_dag_lca_one(self):
         self.aGraph.add_edge(0, 1)
         self.aGraph.add_edge(0, 2)
         self.aGraph.add_edge(1, 3)
@@ -150,6 +150,26 @@ class LCATest(unittest.TestCase):
         self.aGraph.add_edge(2, 6)
         self.aGraph.add_edge(1, 6)
         self.assertEqual(1, self.aGraph.get_lca(0, 6, 3))
+
+    def test_get_dag_lca_two(self):
+        self.assertEqual(None, self.aGraph.get_lca(0, 5, 6))
+        self.aGraph.add_edge(0, 1)
+        self.aGraph.add_edge(1, 2)
+        self.aGraph.add_edge(1, 3)
+        self.aGraph.add_edge(2, 4)
+        self.aGraph.add_edge(3, 5)
+        self.aGraph.add_edge(4, 6)
+        self.aGraph.add_edge(5, 7)
+        self.aGraph.add_edge(6, 8)
+        self.aGraph.add_edge(7, 8)
+        self.aGraph.add_edge(8, 9)
+        self.assertEqual(3, self.aGraph.get_lca(0, 9, 3))
+        self.assertEqual(4, self.aGraph.get_lca(0, 9, 4))
+        self.assertEqual(6, self.aGraph.get_lca(0, 9, 6))
+        self.aGraph.add_edge(4, 9)
+        self.assertEqual(3, self.aGraph.get_lca(0, 9, 3))
+        self.assertEqual(4, self.aGraph.get_lca(0, 9, 4))
+        self.assertEqual(6, self.aGraph.get_lca(0, 9, 6))
 
 
 if __name__ == '__main__':
