@@ -13,12 +13,6 @@ class Graph:
             self.adjList[u].append(v)
             self.E = self.E + 1
 
-    #TODO: currently if two paths of equal length from the root
-    #to a node exist, only one of them is recorded, but the LCA
-    #for two nodes could be in the other path. Fix
-    #IDEA: run BFS from each of the nodes. Each BFS run gets its own
-    #arrays. If x is marked when running BFS from y, then y is the LCA,
-    #and vice-versa. Otherwise proceed as before
     def get_lca(self, root, x, y):
         xMarked = [False for v in range(self.V)]
         xDistTo = [0 for v in range(self.V)]
