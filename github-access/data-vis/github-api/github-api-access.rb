@@ -3,25 +3,27 @@ require 'json'
 require 'net/http'
 require "io/console"
 
-
+def send_request(user, password, uri)
+  request = Net::HTTP::Get.new(uri)
+  request.basic_auth(user, password)
+  req_options = {
+    use_ssl: uri.scheme == "https",
+  }
+  response = Net::HTTP.start(uri.hostname, uri.port, req_options) do |http|
+    http.request(request)
+  end
+  return JSON.parse(response.body)
+end
 
 def user_has_repo?(user, password, repo)
   github_repo_uri = URI.parse("https://api.github.com/repos/" + user + "/" + repo)
-  request = Net::HTTP::Get.new(github_repo_uri)
-  request.basic_auth(user, password)
-  req_options = {
-    use_ssl: github_repo_uri.scheme == "https",
-  }
-  response = Net::HTTP.start(github_repo_uri.hostname, github_repo_uri.port, req_options) do |http|
-    http.request(request)
-  end
-  json_result = response.body
-  result = JSON.parse(json_result)
+  result = send_request user, password, github_repo_uri
   return result.has_key? "name"
 end
 
-def get_contributors_and_commits(user, password, repo)
-
+def get_contributors(user, password, repo)
+  uri = URI.parse("https://api.github.com/repos/" + user + "/" + repo + "/contributors")
+  return send_request user, password, uri
 end
 
 #TODO: deal with bad credentials or the user entering a repo that they don't
