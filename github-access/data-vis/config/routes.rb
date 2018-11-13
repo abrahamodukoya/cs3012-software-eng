@@ -3,5 +3,5 @@ Rails.application.routes.draw do
 
   resource :visuals
 
-  root 'visuals#show'
+  root 'visuals#index'
 end

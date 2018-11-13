@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  repo_id: 1
+  user_id: 1
+  commits: 1
+  issues_closed: 1
+
+two:
+  repo_id: 1
+  user_id: 1
+  commits: 1
+  issues_closed: 1

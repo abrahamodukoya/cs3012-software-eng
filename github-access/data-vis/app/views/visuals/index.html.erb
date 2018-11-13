@@ -1,0 +1,5 @@
+<%= link_to 'Enter new repo', new_visuals_path %>
+
+<% @repos.each do |repo| %>
+  <p><%= repo.name %><p>
+<% end %>
