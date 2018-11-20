@@ -1,9 +1,7 @@
-<%= link_to 'Enter new repo', new_visuals_path %>
+<%= link_to 'Enter new repo', new_visual_path %>
 
+<h2>Repositories</h2>
 <% @repos.each do |repo| %>
-  <p><%= repo.name %><p>
-<% end %>
-
-<% @users.each do |user| %>
-  <p><%= user.username %><p>
+  <p><%= repo.name %> <%= link_to 'Destroy', visual_path(repo),
+    method: :delete, data: {confirm: 'Sure, dawg?'} %><p>
 <% end %>
