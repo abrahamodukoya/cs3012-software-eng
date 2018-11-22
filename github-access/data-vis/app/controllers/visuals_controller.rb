@@ -6,6 +6,13 @@ class VisualsController < ApplicationController
   end
 
   def show
+    @repo = Repo.find(params[:id])
+    @contributions = Contribution.where(repo_id: @repo.id)
+    user_ids = []
+    @contributions.to_ary.each do |contrib|
+      user_ids << contrib.user_id
+    end
+    @users = User.find(user_ids)
   end
 
   def new

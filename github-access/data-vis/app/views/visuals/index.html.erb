@@ -2,6 +2,8 @@
 
 <h2>Repositories</h2>
 <% @repos.each do |repo| %>
-  <p><%= repo.name %> <%= link_to 'Destroy', visual_path(repo),
+  <p><%= repo.name %>
+    <%= link_to 'Show Visualisation', visual_path(repo) %>
+    <%= link_to 'Destroy', visual_path(repo),
     method: :delete, data: {confirm: 'Sure, dawg?'} %><p>
 <% end %>
