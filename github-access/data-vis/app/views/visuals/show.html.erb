@@ -1,7 +1,91 @@
-<h1>Testing, testing, 1,2,3...</h1>
-<script src="https://d3js.org/d3.v5.min.js"></script>
-<%@users.each do |user| %>
-  <p>
-    <%= user.username %>
-  </p>
-<% end %>
+<!--
+bar chart d3js tutorial @ https://bost.ocks.org/mike/bar/ was used
+-->
+<h1>Graph of Commits and Closed Issues by User for a Repository</h1>
+<script src="d3/d3.min.js"></script>
+<style>
+  .issue_bar {
+    fill: green;
+  }
+
+  .commit_bar {
+    fill: steelblue;
+  }
+
+  .axis text {
+    font: 10px sans-serif;
+  }
+
+  .axis path,
+  .axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+  }
+
+  .x.axis path {
+    display: none;
+  }
+</style>
+<svg class="chart"></svg>
+<script type="text/javascript">
+  var data = []
+  <% @user_vals.each do |user| %>
+    data.push({name: "<%=user[:username]%>" + " commits", value: <%=user[:commits]%>})
+    data.push({name: "<%=user[:username]%>" + " issues closed", value: <%=user[:issues]%>})
+  <% end %>
+
+  var margin = {top: 20, right: 30, bottom: 30, left: 40}, width = (data.length * 2 * 100) - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+
+  var x = d3.scaleBand()
+    .rangeRound([0, width])
+    .padding(0.1);
+  x.domain(data.map(function(d) { return d.name; }));
+
+  var y = d3.scaleLinear()
+    .domain([0, d3.max(data, function(d) { return d.value; })])
+    .range([height, 0]);
+
+  var xAxis = d3.axisBottom(x);
+  var yAxis = d3.axisLeft(y);
+
+  var chart = d3.select(".chart")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+    .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+  chart.append("g")
+    .attr("class", "x axis")
+    .attr("transform", "translate(0," + height + ")")
+    .call(xAxis);
+
+  chart.append("g")
+    .attr("class", "y axis")
+    .call(yAxis);
+
+  chart.selectAll(".bar")
+    .data(data)
+    .enter().append("rect")
+    .attr("class", "bar")
+    .attr("x", function(d) { return x(d.name); })
+    .attr("y", function(d) { return y(d.value); })
+    .attr("height", function(d) { return height - y(d.value); })
+    .attr("width", x.bandwidth());
+
+  chart.selectAll(".bar").each(function(d, i){
+    if(i % 2 == 1){
+      d3.select(this)
+          .attr("class", "issue_bar");
+    } else {
+      d3.select(this)
+          .attr("class", "commit_bar");
+    }
+  });
+
+  function type(d) {
+    d.value = +d.value; // coerce to number
+    return d;
+  }
+</script>
