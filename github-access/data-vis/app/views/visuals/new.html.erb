@@ -1,14 +1,10 @@
-<%= form_with scope: :repo, url: visuals_path, local: true do |form| %>
-  <!-- <p>
-    <%= form.label "Github Username" %><br>
-    <%= form.text_field :username %>
-  </p>
-
+<%= link_to 'Home', visuals_path %>
+<% if @invalid_repo %>
   <p>
-    <%= form.label "Password" %><br>
-    <%= form.password_field :password %>
-  </p> -->
-
+    Unable to find repository. Please make sure that the repository, owner name, your username and password are valid.
+  </p>
+<% end %>
+<%= form_with scope: :repo, url: visuals_path, local: true do |form| %>
   <p>
     <%= form.label "Repository Name" %><br>
     <%= form.text_field :name %>
@@ -17,6 +13,16 @@
   <p>
     <%= form.label "Repository Owner's username" %><br>
     <%= form.text_field :owner %>
+  </p>
+
+  <p>
+    <%= form.label "Your username" %><br>
+    <%= form.text_field :curr_user %>
+  </p>
+
+  <p>
+    <%= form.label "Your password" %><br>
+    <%= form.password_field :password %>
   </p>
 
   <p>

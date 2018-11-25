@@ -9,12 +9,9 @@ class VisualsController < ApplicationController
     @repo = Repo.find(params[:id])
     @contributions = Contribution.where(repo_id: @repo.id)
     @user_vals = []
-    #user_ids = []
     @contributions.to_ary.each do |contrib|
-      #user_ids << contrib.user_id
       @user_vals << {username:User.find(contrib.user_id).username, commits:contrib.commits, issues:contrib.issues_closed}
     end
-    #@users = User.find(user_ids)
   end
 
   def new
@@ -24,37 +21,24 @@ class VisualsController < ApplicationController
   end
 
   def create
-    #TODO: make a call to Github API here to see if the entered repo
+    #make a call to Github API here to see if the entered repo
     #exists; if it does save it, else display error
-    # username = params[:repo]["username"]
-    # password = params[:repo]["password"]
     repo = params[:repo]["name"]
     owner = params[:repo]["owner"]
-    if user_has_repo? owner, repo
+    curr_user = params[:repo]["curr_user"]
+    password = params[:repo]["password"]
+    if user_has_repo? owner, repo, curr_user, password
+      @invalid_repo = false
       @repo = Repo.new(repos_params)
       @repo.save
-      # contributors = get_contributors owner, password, repo
-      #  contributors.each do |user|
-      #    @user = User.new
-      #    @user.username = user["login"]
-      #    @user.save
-      #    @contribution = Contribution.new
-      #    @contribution.repo_id = @repo.id
-      #    @contribution.user_id = @user.id
-      #    @contribution.commits = get_commits(owner, password, @user.username, repo).length
-      #    @contribution.issues_closed = get_closed_issues(owner, password, @user.username, repo).length
-      #    @contribution.save
-      #    puts "Commits: " + @contribution.commits.to_s
-      #    puts "Issues: " + @contribution.issues_closed.to_s
-      #  end
       contributors = {}
       until contributors != {}
-        contributors = get_contributors_and_commit_num owner, repo
+        contributors = get_contributors_and_commit_num owner, repo, curr_user, password
         #GitHub return HTTP 202 if it hasn't cached the stats results so we wait then try again
         sleep 0.1
       end
 
-
+      issues = get_closed_issues(owner, repo, curr_user, password)
       contributors.each do |user|
         @user = User.new
         @user.username = user["author"]["login"]
@@ -63,12 +47,24 @@ class VisualsController < ApplicationController
         @contribution.repo_id = @repo.id
         @contribution.user_id = @user.id
         @contribution.commits = user["total"].to_i
-        #FIXME need some way of getting every issue, and not having the result be capped at 30
-        @contribution.issues_closed = get_closed_issues(owner, @user.username, repo).length
+        num_issues = 0
+        issues.each do |issue|
+          if issue["assignee"] != nil && issue["assignee"]["login"] == @user.username
+            num_issues = num_issues + 1
+          else
+            issue["assignees"].each do |assig|
+              if assig["login"] == @user.username
+                num_issues = num_issues + 1
+              end
+            end
+          end
+        end
+        @contribution.issues_closed = num_issues
         @contribution.save
       end
-      redirect_to action: "index"
+      redirect_to action: "show", id: @repo.id
     else
+      @invalid_repo = true
       render 'new'
     end
   end

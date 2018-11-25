@@ -1,7 +1,8 @@
 <!--
 bar chart d3js tutorial @ https://bost.ocks.org/mike/bar/ was used
 -->
-<h1>Graph of Commits and Closed Issues by User for a Repository</h1>
+<%= link_to 'Home', visuals_path %>
+<h1>Graph of Commits and Closed Issues for each User for <%= @repo.name %></h1>
 <script src="d3/d3.min.js"></script>
 <style>
   .issue_bar {
@@ -35,7 +36,7 @@ bar chart d3js tutorial @ https://bost.ocks.org/mike/bar/ was used
     data.push({name: "<%=user[:username]%>" + " issues closed", value: <%=user[:issues]%>})
   <% end %>
 
-  var margin = {top: 20, right: 30, bottom: 30, left: 40}, width = (data.length * 2 * 100) - margin.left - margin.right,
+  var margin = {top: 20, right: 30, bottom: 30, left: 40}, width = (data.length * 2 * 80) - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 
   var x = d3.scaleBand()
